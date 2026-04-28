@@ -18,7 +18,7 @@ const app = express();
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: (origin, callback) => {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     // Allow any localhost port during development
     if (!origin || origin.match(/^http:\/\/localhost:\d+$/)) {
       callback(null, true);

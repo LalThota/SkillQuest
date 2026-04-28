@@ -30,7 +30,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       passwordHash,
     });
 
-    const { accessToken, refreshToken } = generateTokens(user._id as string);
+    const { accessToken, refreshToken } = generateTokens(user._id.toString());
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -62,7 +62,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
       return next(new ApiError(401, 'Invalid credentials'));
     }
 
-    const { accessToken, refreshToken } = generateTokens(user._id as string);
+    const { accessToken, refreshToken } = generateTokens(user._id.toString());
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -107,7 +107,7 @@ export const refreshTokenHandler = async (req: Request, res: Response, next: Nex
       return next(new ApiError(401, 'Invalid refresh token'));
     }
 
-    const tokens = generateTokens(user._id as string);
+    const tokens = generateTokens(user._id.toString());
 
     res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
