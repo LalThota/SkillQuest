@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { CATEGORIES } from '../lib/constants';
 import { motion } from 'framer-motion';
 import { Zap, ClipboardList, Gamepad2, ArrowLeft } from 'lucide-react';
+import { useQuizStore } from '../store/useQuizStore';
 
 export default function ModeSelectPage() {
   const { id } = useParams<{ id: string }>();
@@ -18,7 +19,7 @@ export default function ModeSelectPage() {
       desc: '10 questions • ~8 minutes • Timed',
       btnLabel: 'START NOW',
       gradient: 'from-violet-600 to-indigo-600',
-      action: () => navigate(`/quiz?mode=quick&category=${cat.id}`),
+      action: () => { useQuizStore.getState().resetQuiz(); navigate(`/quiz?mode=quick&category=${cat.id}`); },
     },
     {
       key: 'full',
@@ -27,7 +28,7 @@ export default function ModeSelectPage() {
       desc: '30 questions • ~30 minutes • Timed + Rank',
       btnLabel: 'START TEST',
       gradient: 'from-gray-700 to-gray-800',
-      action: () => navigate(`/quiz?mode=full&category=${cat.id}&count=30`),
+      action: () => { useQuizStore.getState().resetQuiz(); navigate(`/quiz?mode=full&category=${cat.id}&count=30`); },
     },
     ...(cat.hasGameMode ? [{
       key: 'game',
@@ -36,7 +37,7 @@ export default function ModeSelectPage() {
       desc: 'Puzzle Play • Unlimited time • Lives system',
       btnLabel: 'PLAY NOW',
       gradient: 'from-red-600 to-orange-600',
-      action: () => navigate(`/game/${cat.id}`),
+      action: () => { useQuizStore.getState().resetQuiz(); navigate(`/game/${cat.id}`); },
     }] : []),
   ];
 
