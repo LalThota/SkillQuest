@@ -19,8 +19,17 @@ const app = express();
 app.use(helmet());
 app.use(cors({
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-    // Allow any localhost port during development
-    if (!origin || origin.match(/^http:\/\/localhost:\d+$/)) {
+    const allowedOrigins = [
+      // Allow any localhost port during development
+      /^http:\/\/localhost:\d+$/,
+      // Allow Vercel preview & production deployments
+      /^https:\/\/.*\.vercel\.app$/,
+    ];
+    // Add explicit FRONTEND_URL from env if set
+    if (process.env.FRONTEND_URL) {
+      allowedOrigins.push(new RegExp(`^${process.env.FRONTEND_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`));
+    }
+    if (!origin || allowedOrigins.some(pattern => pattern.test(origin))) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
